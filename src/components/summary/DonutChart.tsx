@@ -48,7 +48,7 @@ export function DonutChart({ categories }: DonutChartProps) {
           iconType="circle"
           iconSize={8}
           formatter={(value) => (
-            <span style={{ fontSize: 12, color: '#6b7280' }}>{value}</span>
+            <span className="text-xs text-gray-500">{value}</span>
           )}
         />
       </PieChart>

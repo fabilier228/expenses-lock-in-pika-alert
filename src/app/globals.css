@@ -11,6 +11,37 @@
   }
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  color: #f3f4f6;
+  background: #111827;
+}
+
+html.dark .bg-gray-50 { background-color: #111827; }
+html.dark .bg-gray-100 { background-color: #1f2937; }
+html.dark .bg-white { background-color: #1f2937; }
+html.dark .text-gray-900 { color: #f9fafb; }
+html.dark .text-gray-800 { color: #f3f4f6; }
+html.dark .text-gray-700 { color: #e5e7eb; }
+html.dark .text-gray-500 { color: #9ca3af; }
+html.dark .text-gray-400 { color: #9ca3af; }
+html.dark .text-gray-300 { color: #6b7280; }
+html.dark .border-gray-50 { border-color: #374151; }
+html.dark .border-gray-100 { border-color: #374151; }
+html.dark .border-gray-200 { border-color: #4b5563; }
+html.dark .border-gray-300 { border-color: #4b5563; }
+html.dark .placeholder-gray-400::placeholder { color: #9ca3af; }
+html.dark .active\:bg-gray-50:active { background-color: #374151; }
+html.dark .hover\:bg-gray-100:hover { background-color: #374151; }
+html.dark .hover\:bg-gray-200:hover { background-color: #4b5563; }
+html.dark .focus\:ring-indigo-100:focus { --tw-ring-color: rgb(99 102 241 / 0.25); }
+html.dark .recharts-default-tooltip { background-color: #1f2937 !important; border: 1px solid #374151 !important; }
+html.dark .recharts-tooltip-label,
+html.dark .recharts-tooltip-item { color: #f3f4f6 !important; }
+
 @layer utilities {
   .pb-safe {
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);

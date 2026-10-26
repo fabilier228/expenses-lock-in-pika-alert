@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
+import { ThemeToggle } from '@/components/profile/ThemeToggle'
 
 interface ProfileCardProps {
   name: string
@@ -48,6 +49,8 @@ export function ProfileCard({ name, email, avatarUrl, memberSince }: ProfileCard
           <p className="text-sm text-gray-500">{email}</p>
         </div>
       </div>
+
+      <ThemeToggle />
 
       <div className="rounded-2xl bg-white p-4 shadow-sm">
         <p className="text-sm text-gray-500">Member since</p>
