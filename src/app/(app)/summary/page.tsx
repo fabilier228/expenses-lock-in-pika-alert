@@ -6,9 +6,12 @@ import { PeriodSelector } from '@/components/summary/PeriodSelector'
 import { DonutChart } from '@/components/summary/DonutChart'
 import { SummaryTable } from '@/components/summary/SummaryTable'
 import type { SummaryCategory } from '@/types/database'
+import type { Currency } from '@/lib/utils/formatCurrency'
 
 async function SummaryContent({ period }: { period: Period }) {
   const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const currency: Currency = user?.user_metadata?.currency === 'EUR' ? 'EUR' : 'PLN'
   const { start, end } = getDateRange(period)
 
   const [categoriesRes, expensesRes, subscriptionsRes] = await Promise.all([
@@ -60,11 +63,11 @@ async function SummaryContent({ period }: { period: Period }) {
     <>
       <div className="rounded-2xl bg-indigo-500 p-5 text-white">
         <p className="text-sm font-medium text-indigo-200">{formatPeriodLabel(period)}</p>
-        <p className="mt-1 text-3xl font-bold">{formatCurrency(totalSpent)}</p>
+        <p className="mt-1 text-3xl font-bold">{formatCurrency(totalSpent, currency)}</p>
         <p className="mt-0.5 text-sm text-indigo-200">Total spent</p>
         {totalIncome > 0 && (
           <p className="mt-2 text-sm text-indigo-100">
-            Income: <span className="font-semibold">{formatCurrency(totalIncome)}</span>
+            Income: <span className="font-semibold">{formatCurrency(totalIncome, currency)}</span>
           </p>
         )}
         {period === 'week' && (
@@ -74,9 +77,9 @@ async function SummaryContent({ period }: { period: Period }) {
         )}
       </div>
 
-      <DonutChart categories={summaryCategories.filter((c) => c.type !== 'income')} />
+      <DonutChart categories={summaryCategories.filter((c) => c.type !== 'income')} currency={currency} />
 
-      <SummaryTable categories={summaryCategories} period={period} />
+      <SummaryTable categories={summaryCategories} period={period} currency={currency} />
     </>
   )
 }

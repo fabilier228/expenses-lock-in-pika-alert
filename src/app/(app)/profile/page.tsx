@@ -15,6 +15,7 @@ export default async function ProfilePage() {
         email={user.email ?? ''}
         avatarUrl={user.user_metadata?.avatar_url}
         memberSince={user.created_at}
+        currency={user.user_metadata?.currency === 'EUR' ? 'EUR' : 'PLN'}
       />
     </div>
   )

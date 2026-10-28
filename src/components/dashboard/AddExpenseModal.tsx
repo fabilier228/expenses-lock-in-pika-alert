@@ -6,13 +6,15 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Category } from '@/types/database'
+import type { Currency } from '@/lib/utils/formatCurrency'
 
 interface AddExpenseModalProps {
   category: Category | null
   onClose: () => void
+  currency: Currency
 }
 
-export function AddExpenseModal({ category, onClose }: AddExpenseModalProps) {
+export function AddExpenseModal({ category, onClose, currency }: AddExpenseModalProps) {
   const router = useRouter()
   const [amount, setAmount] = useState('')
   const [comment, setComment] = useState('')
@@ -57,7 +59,7 @@ export function AddExpenseModal({ category, onClose }: AddExpenseModalProps) {
     <Modal open={!!category} onClose={handleClose} title={category?.name ?? ''}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
-          label="Amount (zł)"
+          label={`Amount (${currency})`}
           type="number"
           inputMode="decimal"
           min="0.01"

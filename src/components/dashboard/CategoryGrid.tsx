@@ -6,6 +6,7 @@ import { Category } from '@/types/database'
 import { AddExpenseModal } from './AddExpenseModal'
 import { AddCategoryModal } from './AddCategoryModal'
 import { SubscriptionModal } from './SubscriptionModal'
+import type { Currency } from '@/lib/utils/formatCurrency'
 
 const TILE_COLORS = [
   'bg-violet-100 text-violet-700',
@@ -30,9 +31,10 @@ function getTileColor(category: Category, index: number): string {
 
 interface CategoryGridProps {
   categories: Category[]
+  currency: Currency
 }
 
-export function CategoryGrid({ categories }: CategoryGridProps) {
+export function CategoryGrid({ categories, currency }: CategoryGridProps) {
   const router = useRouter()
   const [editMode, setEditMode] = useState(false)
   const [activeCategory, setActiveCategory] = useState<Category | null>(null)
@@ -99,6 +101,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
 
       <AddExpenseModal
         category={activeCategory}
+        currency={currency}
         onClose={() => setActiveCategory(null)}
       />
 
@@ -106,6 +109,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
         <SubscriptionModal
           open={true}
           categoryId={subCategory.id}
+          currency={currency}
           onClose={() => setSubCategory(null)}
         />
       )}

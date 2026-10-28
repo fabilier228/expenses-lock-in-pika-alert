@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getDateRange, formatPeriodLabel, type Period } from '@/lib/utils/dateRanges'
 import { formatCurrency } from '@/lib/utils/formatCurrency'
 import Link from 'next/link'
+import { ExpenseHistory, type ExpenseHistoryItem } from '@/components/dashboard/ExpenseHistory'
 
 export default async function CategoryDrilldownPage({
   params,
@@ -12,6 +13,8 @@ export default async function CategoryDrilldownPage({
 }) {
   const period = (searchParams.period ?? 'month') as Period
   const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const currency = user?.user_metadata?.currency === 'EUR' ? 'EUR' : 'PLN'
   const { start, end } = getDateRange(period)
 
   const [categoryRes, expensesRes] = await Promise.all([
@@ -31,6 +34,10 @@ export default async function CategoryDrilldownPage({
 
   const category = categoryRes.data
   const expenses = expensesRes.data ?? []
+  const history: ExpenseHistoryItem[] = expenses.map((expense) => ({
+    ...expense,
+    categoryName: category?.name ?? 'Category',
+  }))
   const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0)
 
   return (
@@ -47,41 +54,15 @@ export default async function CategoryDrilldownPage({
 
       <div className="rounded-2xl bg-gray-900 p-4 text-white">
         <p className="text-sm text-gray-400">{formatPeriodLabel(period)}</p>
-        <p className="mt-1 text-2xl font-bold">{formatCurrency(total)}</p>
+        <p className="mt-1 text-2xl font-bold">{formatCurrency(total, currency)}</p>
         <p className="text-sm text-gray-400">{expenses.length} transactions</p>
       </div>
 
-      {expenses.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-400">No expenses in this period.</p>
-      ) : (
-        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
-          {expenses.map((expense, i) => (
-            <div
-              key={expense.id}
-              className={`flex items-start justify-between px-4 py-3.5 ${
-                i < expenses.length - 1 ? 'border-b border-gray-50' : ''
-              }`}
-            >
-              <div>
-                <p className="text-sm font-medium text-gray-800">
-                  {expense.comment || category?.name}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {new Date(expense.created_at).toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-              </div>
-              <p className="text-sm font-semibold text-gray-900">
-                {formatCurrency(Number(expense.amount))}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+      <ExpenseHistory
+        expenses={history}
+        currency={currency}
+        emptyMessage="No expenses in this period."
+      />
     </div>
   )
 }

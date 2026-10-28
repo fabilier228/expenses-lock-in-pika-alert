@@ -3,17 +3,15 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import type { SummaryCategory } from '@/types/database'
 import { formatCurrency } from '@/lib/utils/formatCurrency'
-
-const COLORS = [
-  '#6366f1', '#10b981', '#f59e0b', '#ef4444',
-  '#8b5cf6', '#06b6d4', '#f97316', '#ec4899',
-]
+import { getCategoryColor } from '@/lib/utils/categoryColor'
+import type { Currency } from '@/lib/utils/formatCurrency'
 
 interface DonutChartProps {
   categories: SummaryCategory[]
+  currency: Currency
 }
 
-export function DonutChart({ categories }: DonutChartProps) {
+export function DonutChart({ categories, currency }: DonutChartProps) {
   if (categories.length === 0) {
     return (
       <div className="flex h-48 items-center justify-center text-sm text-gray-400">
@@ -22,7 +20,7 @@ export function DonutChart({ categories }: DonutChartProps) {
     )
   }
 
-  const data = categories.map((c) => ({ name: c.name, value: c.total }))
+  const data = categories.map((c) => ({ id: c.id, name: c.name, value: c.total }))
 
   return (
     <ResponsiveContainer width="100%" height={240}>
@@ -36,12 +34,12 @@ export function DonutChart({ categories }: DonutChartProps) {
           paddingAngle={2}
           dataKey="value"
         >
-          {data.map((_, index) => (
-            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+          {data.map((category) => (
+            <Cell key={category.id} fill={getCategoryColor(category.id)} />
           ))}
         </Pie>
         <Tooltip
-          formatter={(value) => formatCurrency(Number(value))}
+          formatter={(value) => formatCurrency(Number(value), currency)}
           contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
         />
         <Legend

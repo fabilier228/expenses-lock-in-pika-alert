@@ -7,14 +7,16 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Subscription } from '@/types/database'
 import { formatCurrency } from '@/lib/utils/formatCurrency'
+import type { Currency } from '@/lib/utils/formatCurrency'
 
 interface SubscriptionModalProps {
   open: boolean
   categoryId: string
   onClose: () => void
+  currency: Currency
 }
 
-export function SubscriptionModal({ open, categoryId, onClose }: SubscriptionModalProps) {
+export function SubscriptionModal({ open, categoryId, onClose, currency }: SubscriptionModalProps) {
   const router = useRouter()
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [name, setName] = useState('')
@@ -94,7 +96,7 @@ export function SubscriptionModal({ open, categoryId, onClose }: SubscriptionMod
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-medium text-gray-500">Monthly total</p>
               <p className="text-base font-semibold text-indigo-600">
-                {formatCurrency(monthlyTotal)}
+                {formatCurrency(monthlyTotal, currency)}
               </p>
             </div>
             <ul className="flex flex-col gap-2">
@@ -119,7 +121,7 @@ export function SubscriptionModal({ open, categoryId, onClose }: SubscriptionMod
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={`text-sm ${sub.active ? 'text-gray-700' : 'text-gray-400'}`}>
-                      {formatCurrency(Number(sub.amount))}
+                      {formatCurrency(Number(sub.amount), currency)}
                     </span>
                     <button
                       onClick={() => deleteSub(sub.id)}
@@ -148,7 +150,7 @@ export function SubscriptionModal({ open, categoryId, onClose }: SubscriptionMod
             inputMode="decimal"
             min="0.01"
             step="0.01"
-            placeholder="Monthly amount (zł)"
+            placeholder={`Monthly amount (${currency})`}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required

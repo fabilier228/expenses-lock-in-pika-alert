@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+  statusBarStyle: 'black-translucent',
     title: 'Pika Alert',
   },
 }
@@ -17,7 +17,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#6366f1',
+  themeColor: '#111827',
 }
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
