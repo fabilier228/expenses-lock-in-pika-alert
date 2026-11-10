@@ -27,31 +27,40 @@ export function AddExpenseModal({ category, onClose, currency }: AddExpenseModal
     setLoading(true)
     setError('')
 
-    const res = await fetch('/api/expenses', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        category_id: category.id,
-        amount,
-        comment: comment || undefined,
-      }),
-    })
+    try {
+      const res = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category_id: category.id,
+          amount,
+          comment: comment || undefined,
+        }),
+      })
 
-    if (!res.ok) {
-      const data = await res.json()
-      setError(data.error ?? 'Something went wrong')
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error ?? 'Something went wrong')
+        setLoading(false)
+        return
+      }
+
+      router.refresh()
+      setAmount('')
+      setComment('')
       setLoading(false)
-      return
+      onClose()
+    } catch {
+      setError('Could not add this record. Please try again.')
+      setLoading(false)
     }
-
-    router.refresh()
-    onClose()
   }
 
   function handleClose() {
     setAmount('')
     setComment('')
     setError('')
+    setLoading(false)
     onClose()
   }
 
